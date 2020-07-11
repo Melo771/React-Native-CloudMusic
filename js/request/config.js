@@ -1,17 +1,44 @@
-import axios from 'axios';
+const BASE_URL = 'http://melo.show:3000';
 
-const baseUrl = 'http://melo.show:3000';
+function get(_url) {
+  const url = BASE_URL + _url;
 
-// axios 的实例及拦截器配置
-const axiosInstance = axios.create({
-  baseURL: baseUrl,
-});
+  return fetch(url, {
+    method: 'GET',
+  })
+    .then(response => {
+      return handleResponse(url, response);
+    })
+    .catch(error => {
+      console.error(`Request failed. Url = ${url}. Message = ${error}`);
+      return Promise.reject({error: {message: 'Request failed.'}});
+    });
+}
 
-axiosInstance.interceptors.response.use(
-  res => res.data,
-  err => {
-    console.log(err, '网络错误');
-  },
-);
+function post(_url, data) {
+  const url = BASE_URL + _url;
+  return fetch(url, {
+    method: 'POST',
+    body: data,
+  })
+    .then(response => {
+      return handleResponse(url, response);
+    })
+    .catch(error => {
+      console.error(`Request failed. Url = ${url}. Message = ${error}`);
+      return Promise.reject({error: {message: 'Request failed.'}});
+    });
+}
 
-export {axiosInstance};
+function handleResponse(url, response) {
+  if (response.status === 200) {
+    return response.json();
+  } else {
+    console.error(`Request failed. Url = ${url}`);
+    return Promise.reject({
+      error: {message: 'Request failed due to server error'},
+    });
+  }
+}
+
+export {get, post};

@@ -1,12 +1,13 @@
-import React, {Component} from 'react';
+import React, {useState} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import HomeTopNavigator from '../../navigator/HomeTopNavigator';
+import GlobalStyles from '../../res/styles/GlobalStyles';
 
 const tabs = [
   {
     label: '推荐',
-    name: 'ClassicPage',
+    name: 'Recommend',
   },
   {
     label: '歌手',
@@ -18,22 +19,15 @@ const tabs = [
   },
 ];
 
-class HomePage extends Component {
-  constructor() {
-    super();
-    this.state = {
-      tabActive: 0,
-    };
-  }
+function HomePage(props) {
+  const [tabActive, setTabActive] = useState(0);
 
-  handleTabChange(index) {
-    this.setState({
-      tabActive: index,
-    });
-    this.props.navigation.navigate(tabs[index].name);
-  }
+  const handleTabChange = index => {
+    setTabActive(index);
+    props.navigation.navigate(tabs[index].name);
+  };
 
-  renderHeader() {
+  const renderHeader = () => {
     return (
       <View style={styles.header}>
         <Ionicons name="md-menu" color={'#fff'} size={25} />
@@ -41,17 +35,16 @@ class HomePage extends Component {
         <Ionicons name="ios-search" color={'#fff'} size={25} />
       </View>
     );
-  }
+  };
 
-  renderTab() {
-    const {tabActive} = this.state;
+  const renderTab = () => {
     return (
       <View style={styles.tabContainer}>
         {tabs.map((tab, index) => {
           return (
             <TouchableOpacity
               key={index}
-              onPress={() => this.handleTabChange(index)}
+              onPress={() => handleTabChange(index)}
               style={styles.tabItem}>
               <Text
                 style={[
@@ -65,34 +58,28 @@ class HomePage extends Component {
         })}
       </View>
     );
-  }
+  };
 
-  navigatorChange(route) {
+  const navigatorChange = route => {
     let tabActive = 0;
     tabs.forEach((item, index) => {
       if (item.name === route.name) {
         tabActive = index;
       }
     });
-    this.setState({
-      tabActive,
-    });
-  }
+    setTabActive(tabActive);
+  };
 
-  render() {
-    return (
-      <View style={{flex: 1}}>
-        {this.renderHeader()}
-        {this.renderTab()}
-        <HomeTopNavigator
-          navigatorChange={route => this.navigatorChange(route)}
-        />
-      </View>
-    );
-  }
+  return (
+    <View style={{flex: 1}}>
+      {renderHeader()}
+      {renderTab()}
+      <HomeTopNavigator navigatorChange={route => navigatorChange(route)} />
+    </View>
+  );
 }
 
-const THEME_COLOR = 'rgb(212, 68, 57)';
+const themeColor = GlobalStyles.themeColor;
 const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
@@ -101,7 +88,7 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     paddingHorizontal: 10,
     height: 50,
-    backgroundColor: THEME_COLOR,
+    backgroundColor: themeColor,
   },
   headerTitle: {
     fontSize: 20,
@@ -111,7 +98,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     height: 44,
-    backgroundColor: THEME_COLOR,
+    backgroundColor: themeColor,
   },
   tabItem: {
     flex: 1,
