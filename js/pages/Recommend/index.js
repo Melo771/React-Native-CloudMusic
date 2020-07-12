@@ -1,7 +1,14 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, memo} from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
-import {View, Text, StyleSheet, Image, Dimensions} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  Dimensions,
+  ScrollView,
+} from 'react-native';
 import Swiper from 'react-native-swiper';
 import {
   getBannerList,
@@ -10,6 +17,7 @@ import {
   actions as recommendActions,
 } from '../../redux/modules/recommend';
 import GlobalStyles from '../../res/styles/GlobalStyles';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 const {width} = Dimensions.get('window');
 
 function Recommend(props) {
@@ -28,6 +36,7 @@ function Recommend(props) {
   const bannerListJs = bannerList ? bannerList.toJS() : [];
   const recommendListJS = recommendList ? recommendList.toJS() : [];
 
+  // 轮播
   const renderSwiper = () => {
     return (
       <View style={styles.swiper}>
@@ -50,19 +59,62 @@ function Recommend(props) {
     );
   };
 
-  return (
-    <View style={{flex: 1}}>
-      <View style={styles.swiperWrapper}>
-        <View style={styles.swiperBefore} />
-        {renderSwiper()}
+  // 处理收听量
+  const getCount = count => {
+    if (count < 0) {
+      return;
+    }
+    if (count < 10000) {
+      return count;
+    } else if (Math.floor(count / 10000) < 10000) {
+      return Math.floor(count / 1000) / 10 + '万';
+    } else {
+      return Math.floor(count / 10000000) / 10 + '亿';
+    }
+  };
+
+  // 推荐列表
+  const renderList = () => {
+    const list = recommendListJS.map((item, index) => (
+      <View style={styles.recommendItem} key={index}>
+        <View style={styles.recommendItemContainer}>
+          <Image
+            style={styles.recommendItemImg}
+            source={{uri: item.picUrl + '?param=300x300'}}
+          />
+          <View style={styles.recommendItemCount}>
+            <Ionicons name="md-headset" color={'#fff'} size={14} />
+            <Text style={styles.recommendItemCountText}>
+              {getCount(item.playCount)}
+            </Text>
+          </View>
+        </View>
+        <Text style={styles.recommendItemDesc}>{item.name}</Text>
       </View>
+    ));
+
+    return list;
+  };
+
+  return (
+    <View style={[GlobalStyles.root_container]}>
+      <ScrollView>
+        <View style={styles.swiperWrapper}>
+          <View style={styles.swiperBefore} />
+          {renderSwiper()}
+        </View>
+        <View style={styles.recommendWrapper}>
+          <Text style={styles.recommendTitle}>推荐歌单</Text>
+          <View style={styles.recommendListWrapper}>{renderList()}</View>
+        </View>
+      </ScrollView>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   swiperWrapper: {
-    flex: 1,
+    height: 160,
     position: 'relative',
   },
   swiperBefore: {
@@ -70,8 +122,8 @@ const styles = StyleSheet.create({
     backgroundColor: GlobalStyles.themeColor,
   },
   swiper: {
-    position: 'absolute',
     height: 160,
+    position: 'absolute',
     left: width * 0.01,
   },
   slide: {
@@ -82,13 +134,50 @@ const styles = StyleSheet.create({
   image: {
     flex: 1,
     borderRadius: 6,
-    width: width * 0.98,
   },
-
-  text: {
+  recommendWrapper: {},
+  recommendTitle: {
+    fontWeight: '700',
+    paddingLeft: 6,
+    fontSize: 14,
+    lineHeight: 60,
+  },
+  recommendListWrapper: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    flexWrap: 'wrap',
+    flex: 1,
+  },
+  recommendItem: {
+    width: width * 0.32,
+  },
+  recommendItemContainer: {
+    alignItems: 'center',
+  },
+  recommendItemImg: {
+    width: width * 0.32,
+    height: 115,
+    borderRadius: 3,
+  },
+  recommendItemCount: {
+    position: 'absolute',
+    top: 2,
+    right: 2,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  recommendItemCountText: {
+    marginLeft: 3,
     color: '#fff',
-    fontSize: 30,
-    fontWeight: 'bold',
+    fontSize: 12,
+  },
+  recommendItemDesc: {
+    marginTop: 4,
+    marginBottom: 2,
+    height: 50,
+    color: '#2E3030',
+    paddingHorizontal: 4,
+    fontSize: 12,
   },
 });
 
@@ -108,4 +197,4 @@ const mapDispatchToProps = (dispatch, props) => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(Recommend);
+)(memo(Recommend));
