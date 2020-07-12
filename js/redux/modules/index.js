@@ -1,4 +1,4 @@
-import {combineReducers} from 'redux-immutable';
+import {combineReducers} from 'redux';
 import recommend from './recommend';
 
 export default combineReducers({
