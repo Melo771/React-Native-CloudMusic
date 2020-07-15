@@ -17,7 +17,7 @@ const tabs = [
   },
   {
     label: '排行版',
-    name: 'LikePage',
+    name: 'Ranking',
   },
 ];
 
@@ -53,13 +53,13 @@ function HomePage(props) {
               key={index}
               onPress={() => handleTabChange(index)}
               style={styles.tabItem}>
-              <Text
+              <View
                 style={[
-                  styles.tabText,
+                  styles.tabItemContainer,
                   index === tabActive && styles.tabTextActive,
                 ]}>
-                {tab.label}
-              </Text>
+                <Text style={styles.tabText}>{tab.label}</Text>
+              </View>
             </TouchableOpacity>
           );
         })}
@@ -68,13 +68,13 @@ function HomePage(props) {
   };
 
   const navigatorChange = route => {
-    let tabActive = 0;
+    let active = 0;
     tabs.forEach((item, index) => {
       if (item.name === route.name) {
-        tabActive = index;
+        active = index;
       }
     });
-    setTabActive(tabActive);
+    setTabActive(active);
   };
 
   return (
@@ -94,10 +94,6 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     paddingHorizontal: 10,
   },
-  headerTitle: {
-    fontSize: 20,
-    color: '#fff',
-  },
   tabContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -111,11 +107,13 @@ const styles = StyleSheet.create({
   },
   tabText: {
     fontWeight: '700',
-    borderBottomWidth: 2,
-    borderColor: 'transparent',
     textAlign: 'center',
     color: '#fff',
     paddingVertical: 3,
+  },
+  tabItemContainer: {
+    borderBottomWidth: 2,
+    borderColor: 'transparent',
   },
   tabTextActive: {
     borderColor: '#fff',

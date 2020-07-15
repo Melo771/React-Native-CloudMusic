@@ -1,53 +1,51 @@
-import React, {useEffect, memo} from 'react';
+import React, {memo, useEffect} from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
   Dimensions,
+  Image,
   ScrollView,
+  StyleSheet,
+  Text,
+  View,
 } from 'react-native';
 import Swiper from 'react-native-swiper';
 import {
+  actions as recommendActions,
   getBannerList,
   getEnterLoading,
   getRecommendList,
-  actions as recommendActions,
 } from '../../redux/modules/recommend';
 import GlobalStyles from '../../res/styles/GlobalStyles';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import LinearGradient from 'react-native-linear-gradient';
+
 const {width} = Dimensions.get('window');
 
 function Recommend(props) {
   const {bannerList, recommendList, enterLoading} = props;
 
   useEffect(() => {
-    if (!bannerList.size) {
+    if (!bannerList.length) {
       props.recommendActions.getBannerList();
     }
-    if (!recommendList.size) {
+    if (!recommendList.length) {
       props.recommendActions.getRecommendList();
     }
-    //eslint-disable-next-line
+    // eslint-disable-next-line
   }, []);
-
-  const bannerListJs = bannerList ? bannerList.toJS() : [];
-  const recommendListJS = recommendList ? recommendList.toJS() : [];
 
   // 轮播
   const renderSwiper = () => {
     return (
       <View style={styles.swiper}>
         <Swiper
-          width={width * 0.98}
           dotStyle={{bottom: -15}}
           activeDotStyle={{bottom: -15}}
           activeDotColor={GlobalStyles.themeColor}
           showsButtons={false}
           autoplay={true}>
-          {bannerListJs.map((item, index) => {
+          {bannerList.map((item, index) => {
             return (
               <View key={index} style={styles.slide}>
                 <Image style={styles.image} source={{uri: item.pic}} />
@@ -75,7 +73,7 @@ function Recommend(props) {
 
   // 推荐列表
   const renderList = () => {
-    const list = recommendListJS.map((item, index) => (
+    return recommendList.map((item, index) => (
       <View style={styles.recommendItem} key={index}>
         <View style={styles.recommendItemContainer}>
           <Image
@@ -92,12 +90,16 @@ function Recommend(props) {
         <Text style={styles.recommendItemDesc}>{item.name}</Text>
       </View>
     ));
-
-    return list;
   };
 
+  const linearGradientColors =
+    bannerList.length && recommendList.length
+      ? [GlobalStyles.themeColor, GlobalStyles.themeColor, '#fff', '#fff']
+      : ['#fff', '#fff'];
   return (
-    <View style={[GlobalStyles.root_container]}>
+    <LinearGradient
+      colors={linearGradientColors}
+      style={[GlobalStyles.root_container]}>
       <ScrollView>
         <View style={styles.swiperWrapper}>
           <View style={styles.swiperBefore} />
@@ -108,7 +110,7 @@ function Recommend(props) {
           <View style={styles.recommendListWrapper}>{renderList()}</View>
         </View>
       </ScrollView>
-    </View>
+    </LinearGradient>
   );
 }
 
@@ -116,15 +118,16 @@ const styles = StyleSheet.create({
   swiperWrapper: {
     height: 160,
     position: 'relative',
+    backgroundColor: '#fff',
   },
   swiperBefore: {
     height: 100,
     backgroundColor: GlobalStyles.themeColor,
   },
   swiper: {
+    paddingHorizontal: 4,
     height: 160,
     position: 'absolute',
-    left: width * 0.01,
   },
   slide: {
     flex: 1,
@@ -135,7 +138,9 @@ const styles = StyleSheet.create({
     flex: 1,
     borderRadius: 6,
   },
-  recommendWrapper: {},
+  recommendWrapper: {
+    backgroundColor: '#fff',
+  },
   recommendTitle: {
     fontWeight: '700',
     paddingLeft: 6,
@@ -181,7 +186,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const mapStateToProps = (state, props) => {
+const mapStateToProps = state => {
   return {
     bannerList: getBannerList(state),
     recommendList: getRecommendList(state),
@@ -189,7 +194,7 @@ const mapStateToProps = (state, props) => {
   };
 };
 
-const mapDispatchToProps = (dispatch, props) => {
+const mapDispatchToProps = dispatch => {
   return {
     recommendActions: bindActionCreators(recommendActions, dispatch),
   };
