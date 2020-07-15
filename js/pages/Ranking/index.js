@@ -31,7 +31,6 @@ function Ranking(props) {
   let globalStartIndex = filterIndex(rankList);
   let officialList = rankList.slice(0, globalStartIndex);
   let globalList = rankList.slice(globalStartIndex);
-  console.log(officialList);
 
   const renderSongList = list => {
     return list.map((item, index) => {
@@ -46,16 +45,15 @@ function Ranking(props) {
   const renderOfficial = () => {
     return officialList.map((item, index) => {
       return (
-        <View>
-          <View
-            style={[
-              styles.official,
-              index === officialList.length - 1 && {marginBottom: 0},
-            ]}>
-            <RankingCard img={item.coverImgUrl} desc={item.updateFrequency} />
-            <View style={styles.songListWrapper}>
-              {renderSongList(item.tracks)}
-            </View>
+        <View
+          key={index}
+          style={[
+            styles.official,
+            index === officialList.length - 1 && {marginBottom: 0},
+          ]}>
+          <RankingCard img={item.coverImgUrl} desc={item.updateFrequency} />
+          <View style={styles.songListWrapper}>
+            {renderSongList(item.tracks)}
           </View>
         </View>
       );
@@ -66,9 +64,9 @@ function Ranking(props) {
     return globalList.map((item, index) => {
       return (
         <View
+          key={index}
           style={(index + 1) % 3 === 0 ? {marginRight: 0} : {marginRight: 4.7}}>
           <RankingCard
-            key={item.id}
             img={item.coverImgUrl}
             desc={item.updateFrequency}
             isGlobal={true}

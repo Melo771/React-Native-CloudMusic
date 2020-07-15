@@ -32,7 +32,10 @@ function post(_url, data) {
 
 function handleResponse(url, response) {
   if (response.status === 200) {
-    return response.json();
+    const res = response.json();
+    console.log(url);
+    console.log(res);
+    return res;
   } else {
     console.error(`Request failed. Url = ${url}`);
     return Promise.reject({

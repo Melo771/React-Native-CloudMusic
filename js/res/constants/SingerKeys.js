@@ -49,7 +49,11 @@ export const AREA = [
 ];
 
 // 首字母
-export const INITIAL = [
+export const INITIALS = [
+  {
+    key: -1,
+    name: '热',
+  },
   {
     key: 'A',
     name: 'A',
@@ -153,5 +157,9 @@ export const INITIAL = [
   {
     key: 'Z',
     name: 'Z',
+  },
+  {
+    key: 0,
+    name: '#',
   },
 ];

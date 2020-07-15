@@ -18,17 +18,17 @@ export default function HomeTopNavigator({navigatorChange}) {
         })}
       />
       <Tab.Screen
-        name="Ranking"
-        component={Ranking}
-        options={{tabBarLabel: 'Ranking'}}
+        name="Singer"
+        component={Singer}
+        options={{tabBarLabel: 'Singer'}}
         listeners={({route}) => ({
           state: navigatorChange(route),
         })}
       />
       <Tab.Screen
-        name="Singer"
-        component={Singer}
-        options={{tabBarLabel: 'Singer'}}
+        name="Ranking"
+        component={Ranking}
+        options={{tabBarLabel: 'Ranking'}}
         listeners={({route}) => ({
           state: navigatorChange(route),
         })}

@@ -12,9 +12,10 @@ export const getHotSingerListRequest = count => {
   return get(`/top/artists?offset=${count}`);
 };
 
-export const getSingerListRequest = (category, alpha, count) => {
+export const getSingerListRequest = (type, area, alpha = -1, count) => {
+  const initial = typeof alpha === 'string' ? alpha.toLowerCase() : alpha;
   return get(
-    `/artist/list?cat=${category}&initial=${alpha.toLowerCase()}&offset=${count}`,
+    `/artist/list?type=${type}&area=${area}&initial=${initial}&offset=${count}`,
   );
 };
 
