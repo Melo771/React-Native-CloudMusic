@@ -13,7 +13,7 @@ const tabs = [
   },
   {
     label: '歌手',
-    name: 'BookPage',
+    name: 'Singer',
   },
   {
     label: '排行版',

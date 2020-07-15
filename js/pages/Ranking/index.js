@@ -36,7 +36,7 @@ function Ranking(props) {
   const renderSongList = list => {
     return list.map((item, index) => {
       return (
-        <Text key={item.id} style={styles.songText}>
+        <Text key={index} style={styles.songText}>
           {index + 1}. {item.first} - {item.second}
         </Text>
       );
@@ -66,7 +66,7 @@ function Ranking(props) {
     return globalList.map((item, index) => {
       return (
         <View
-          style={(index + 1) % 3 === 0 ? {marginRight: 0} : {marginRight: 6}}>
+          style={(index + 1) % 3 === 0 ? {marginRight: 0} : {marginRight: 4.7}}>
           <RankingCard
             key={item.id}
             img={item.coverImgUrl}
@@ -81,14 +81,10 @@ function Ranking(props) {
   return (
     <View style={[GlobalStyles.root_container, styles.container]}>
       <ScrollView>
-        <View>
-          <Text style={styles.title}>官方榜</Text>
-          {renderOfficial()}
-        </View>
-        <View>
-          <Text style={styles.title}>全球榜</Text>
-          <View style={styles.global}>{renderGlobalList()}</View>
-        </View>
+        <Text style={styles.title}>官方榜</Text>
+        {renderOfficial()}
+        <Text style={styles.title}>全球榜</Text>
+        <View style={styles.global}>{renderGlobalList()}</View>
       </ScrollView>
     </View>
   );
@@ -111,7 +107,7 @@ function RankingCard(props) {
 
 const styles = StyleSheet.create({
   container: {
-    paddingLeft: 6,
+    paddingHorizontal: 6,
   },
   title: {
     fontWeight: '700',
@@ -125,7 +121,6 @@ const styles = StyleSheet.create({
   global: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    paddingRight: 6,
   },
   listItem: {
     flexDirection: 'row',

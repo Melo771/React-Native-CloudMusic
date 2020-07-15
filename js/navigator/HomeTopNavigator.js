@@ -3,8 +3,8 @@ import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs
 
 const Tab = createMaterialTopTabNavigator();
 import Ranking from '../pages/Ranking';
-import LikePage from '../pages/LikePage';
 import Recommend from '../pages/Recommend';
+import Singer from '../pages/Singer';
 
 export default function HomeTopNavigator({navigatorChange}) {
   return (
@@ -26,9 +26,9 @@ export default function HomeTopNavigator({navigatorChange}) {
         })}
       />
       <Tab.Screen
-        name="LikePage"
-        component={LikePage}
-        options={{tabBarLabel: 'LikePage'}}
+        name="Singer"
+        component={Singer}
+        options={{tabBarLabel: 'Singer'}}
         listeners={({route}) => ({
           state: navigatorChange(route),
         })}
