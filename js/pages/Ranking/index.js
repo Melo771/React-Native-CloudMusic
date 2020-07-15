@@ -3,104 +3,79 @@ import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import {Image, StyleSheet, Text, View, ScrollView} from 'react-native';
 import {
-  actions as recommendActions,
-  getBannerList,
-  getEnterLoading,
-  getRecommendList,
-} from '../../redux/modules/recommend';
+  actions as rankActions,
+  getLoading,
+  getRankList,
+} from '../../redux/modules/ranking';
 import GlobalStyles from '../../res/styles/GlobalStyles';
 
+// 处理数据，找出第一个没有歌名的排行榜的索引
+const filterIndex = rankList => {
+  for (let i = 0; i < rankList.length - 1; i++) {
+    if (rankList[i].tracks.length && !rankList[i + 1].tracks.length) {
+      return i + 1;
+    }
+  }
+};
+
 function Ranking(props) {
-  const renderSongList = () => {
-    const arr = [1, 1, 1];
-    return arr.map(item => {
-      return <Text style={styles.songText}>1.夏天的风 - 王巨星</Text>;
+  const {rankList} = props;
+
+  useEffect(() => {
+    if (!rankList.length) {
+      props.rankActions.getRankList();
+    }
+    // eslint-disable-next-line
+  }, []);
+
+  let globalStartIndex = filterIndex(rankList);
+  let officialList = rankList.slice(0, globalStartIndex);
+  let globalList = rankList.slice(globalStartIndex);
+  console.log(officialList);
+
+  const renderSongList = list => {
+    return list.map((item, index) => {
+      return (
+        <Text key={item.id} style={styles.songText}>
+          {index + 1}. {item.first} - {item.second}
+        </Text>
+      );
     });
   };
 
   const renderOfficial = () => {
-    return (
-      <View>
-        <View style={styles.official}>
-          <View style={styles.listItem}>
-            <Image
-              style={styles.listItemImg}
-              source={{
-                uri:
-                  'https://p2.music.126.net/DrRIg6CrgDfVLEph9SNh7w==/18696095720518497.jpg',
-              }}
-            />
-            <Text style={styles.listItemDesc}>每天更新</Text>
+    return officialList.map((item, index) => {
+      return (
+        <View>
+          <View
+            style={[
+              styles.official,
+              index === officialList.length - 1 && {marginBottom: 0},
+            ]}>
+            <RankingCard img={item.coverImgUrl} desc={item.updateFrequency} />
+            <View style={styles.songListWrapper}>
+              {renderSongList(item.tracks)}
+            </View>
           </View>
-          <View style={styles.songListWrapper}>{renderSongList()}</View>
         </View>
-        <View style={styles.official}>
-          <View style={styles.listItem}>
-            <Image
-              style={styles.listItemImg}
-              source={{
-                uri:
-                  'https://p2.music.126.net/DrRIg6CrgDfVLEph9SNh7w==/18696095720518497.jpg',
-              }}
-            />
-            <Text style={styles.listItemDesc}>每天更新</Text>
-          </View>
-          <View style={styles.songListWrapper}>{renderSongList()}</View>
-        </View>
-        <View style={styles.official}>
-          <View style={styles.listItem}>
-            <Image
-              style={styles.listItemImg}
-              source={{
-                uri:
-                  'https://p2.music.126.net/DrRIg6CrgDfVLEph9SNh7w==/18696095720518497.jpg',
-              }}
-            />
-            <Text style={styles.listItemDesc}>每天更新</Text>
-          </View>
-          <View style={styles.songListWrapper}>{renderSongList()}</View>
-        </View>
-        <View style={[styles.official, {marginBottom: 0}]}>
-          <View style={styles.listItem}>
-            <Image
-              style={styles.listItemImg}
-              source={{
-                uri:
-                  'https://p2.music.126.net/DrRIg6CrgDfVLEph9SNh7w==/18696095720518497.jpg',
-              }}
-            />
-            <Text style={styles.listItemDesc}>每天更新</Text>
-          </View>
-          <View style={styles.songListWrapper}>{renderSongList()}</View>
-        </View>
-      </View>
-    );
+      );
+    });
   };
 
   const renderGlobalList = () => {
-    let arr = [];
-    for (let i = 0; i < 9; i++) {
-      let item = (
+    return globalList.map((item, index) => {
+      return (
         <View
-          key={i}
-          style={[
-            styles.listItem,
-            styles.listItemForGlobal,
-            (i + 1) % 3 === 0 && {marginRight: 0},
-          ]}>
-          <Image
-            style={[styles.listItemImg, styles.listItemForGlobalImg]}
-            source={{
-              uri:
-                'https://p2.music.126.net/DrRIg6CrgDfVLEph9SNh7w==/18696095720518497.jpg',
-            }}
+          style={(index + 1) % 3 === 0 ? {marginRight: 0} : {marginRight: 6}}>
+          <RankingCard
+            key={item.id}
+            img={item.coverImgUrl}
+            desc={item.updateFrequency}
+            isGlobal={true}
           />
-          <Text style={styles.listItemDesc}>每天更新</Text>
         </View>
       );
-      arr.push(item);
-    }
-    return arr;
+    });
   };
 
   return (
@@ -115,6 +90,21 @@ function Ranking(props) {
           <View style={styles.global}>{renderGlobalList()}</View>
         </View>
       </ScrollView>
+    </View>
+  );
+}
+
+function RankingCard(props) {
+  const {img, desc, isGlobal} = props;
+  return (
+    <View style={[styles.listItemImg, isGlobal && styles.listItemForGlobal]}>
+      <Image
+        style={[styles.listItemImg, isGlobal && styles.listItemForGlobalImg]}
+        source={{
+          uri: img,
+        }}
+      />
+      <Text style={styles.listItemDesc}>{desc}</Text>
     </View>
   );
 }
@@ -135,7 +125,6 @@ const styles = StyleSheet.create({
   global: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    justifyContent: 'space-between',
     paddingRight: 6,
   },
   listItem: {
@@ -145,7 +134,6 @@ const styles = StyleSheet.create({
     height: 100,
   },
   listItemForGlobal: {
-    marginRight: 4,
     width: 130,
     height: 130,
     marginBottom: 8,
@@ -178,15 +166,14 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = state => {
   return {
-    bannerList: getBannerList(state),
-    recommendList: getRecommendList(state),
-    enterLoading: getEnterLoading(state),
+    loading: getLoading(state),
+    rankList: getRankList(state),
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    recommendActions: bindActionCreators(recommendActions, dispatch),
+    rankActions: bindActionCreators(rankActions, dispatch),
   };
 };
 export default connect(
