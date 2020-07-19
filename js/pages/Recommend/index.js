@@ -21,6 +21,7 @@ import {
 import GlobalStyles from '../../res/styles/GlobalStyles';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import LinearGradient from 'react-native-linear-gradient';
+import NavigationUtil from '../../navigator/NavigationUtil';
 
 const {width} = Dimensions.get('window');
 
@@ -74,8 +75,7 @@ function Recommend(props) {
   };
 
   const toDetail = data => {
-    console.log(props);
-    props.navigation.navigate('RankingDetail', {...data});
+    NavigationUtil.goPage('RankingDetail');
   };
 
   // 推荐列表

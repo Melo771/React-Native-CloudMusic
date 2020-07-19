@@ -17,7 +17,7 @@ export default {
     backgroundColor: BACKGROUND_COLOR,
   },
   nav_bar_height_ios: 44,
-  nav_bar_height_android: 50,
+  nav_bar_height_android: 55,
   backgroundColor: BACKGROUND_COLOR,
   window_height: height,
   window_Width: width,

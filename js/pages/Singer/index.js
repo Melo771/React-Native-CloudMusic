@@ -216,12 +216,13 @@ const styles = StyleSheet.create({
   singerItemName: {},
   scrollBar: {
     position: 'absolute',
-    top: 30,
+    // top: 30,
     right: 0,
     paddingVertical: 20,
     width: 30,
   },
   scrollBarItem: {
+    fontSize: 12,
     marginBottom: 5,
     textAlign: 'center',
   },

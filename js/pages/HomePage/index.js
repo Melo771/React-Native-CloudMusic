@@ -5,6 +5,7 @@ import HomeTopNavigator from '../../navigator/HomeTopNavigator';
 import GlobalStyles from '../../res/styles/GlobalStyles';
 import NavigationBar from '../../components/NavigationBar';
 import SafeAreaViewPlus from '../../components/SafeAreaViewPlus';
+import NavigationUtil from '../../navigator/NavigationUtil';
 
 const tabs = [
   {
@@ -22,6 +23,8 @@ const tabs = [
 ];
 
 function HomePage(props) {
+  NavigationUtil.navigation = props.navigation;
+
   const [tabActive, setTabActive] = useState(0);
 
   const handleTabChange = index => {
