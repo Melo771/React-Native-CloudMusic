@@ -2,11 +2,13 @@ import React, {memo, useEffect} from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import {
+  ActivityIndicator,
   Dimensions,
   Image,
   ScrollView,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
 } from 'react-native';
 import Swiper from 'react-native-swiper';
@@ -71,10 +73,19 @@ function Recommend(props) {
     }
   };
 
+  const toDetail = data => {
+    console.log(props);
+    props.navigation.navigate('RankingDetail', {...data});
+  };
+
   // 推荐列表
   const renderList = () => {
     return recommendList.map((item, index) => (
-      <View style={styles.recommendItem} key={index}>
+      <TouchableOpacity
+        activeOpacity={1}
+        onPress={() => toDetail(item)}
+        style={styles.recommendItem}
+        key={index}>
         <View style={styles.recommendItemContainer}>
           <Image
             style={styles.recommendItemImg}
@@ -88,7 +99,7 @@ function Recommend(props) {
           </View>
         </View>
         <Text style={styles.recommendItemDesc}>{item.name}</Text>
-      </View>
+      </TouchableOpacity>
     ));
   };
 
@@ -99,17 +110,21 @@ function Recommend(props) {
   return (
     <LinearGradient
       colors={linearGradientColors}
-      style={[GlobalStyles.root_container]}>
-      <ScrollView>
-        <View style={styles.swiperWrapper}>
-          <View style={styles.swiperBefore} />
-          {renderSwiper()}
-        </View>
-        <View style={styles.recommendWrapper}>
-          <Text style={styles.recommendTitle}>推荐歌单</Text>
-          <View style={styles.recommendListWrapper}>{renderList()}</View>
-        </View>
-      </ScrollView>
+      style={[GlobalStyles.root_container, {justifyContent: 'center'}]}>
+      {enterLoading ? (
+        <ActivityIndicator size="large" />
+      ) : (
+        <ScrollView>
+          <View style={styles.swiperWrapper}>
+            <View style={styles.swiperBefore} />
+            {renderSwiper()}
+          </View>
+          <View style={styles.recommendWrapper}>
+            <Text style={styles.recommendTitle}>推荐歌单</Text>
+            <View style={styles.recommendListWrapper}>{renderList()}</View>
+          </View>
+        </ScrollView>
+      )}
     </LinearGradient>
   );
 }

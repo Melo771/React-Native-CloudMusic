@@ -1,7 +1,14 @@
 import React, {memo, useEffect} from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
-import {Image, StyleSheet, Text, View, ScrollView} from 'react-native';
+import {
+  Image,
+  StyleSheet,
+  Text,
+  View,
+  ScrollView,
+  ActivityIndicator,
+} from 'react-native';
 import {
   actions as rankActions,
   getLoading,
@@ -19,7 +26,7 @@ const filterIndex = rankList => {
 };
 
 function Ranking(props) {
-  const {rankList} = props;
+  const {rankList, loading} = props;
 
   useEffect(() => {
     if (!rankList.length) {
@@ -78,12 +85,16 @@ function Ranking(props) {
 
   return (
     <View style={[GlobalStyles.root_container, styles.container]}>
-      <ScrollView>
-        <Text style={styles.title}>官方榜</Text>
-        {renderOfficial()}
-        <Text style={styles.title}>全球榜</Text>
-        <View style={styles.global}>{renderGlobalList()}</View>
-      </ScrollView>
+      {loading ? (
+        <ActivityIndicator size="large" />
+      ) : (
+        <ScrollView>
+          <Text style={styles.title}>官方榜</Text>
+          {renderOfficial()}
+          <Text style={styles.title}>全球榜</Text>
+          <View style={styles.global}>{renderGlobalList()}</View>
+        </ScrollView>
+      )}
     </View>
   );
 }
@@ -106,6 +117,7 @@ function RankingCard(props) {
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 6,
+    justifyContent: 'center',
   },
   title: {
     fontWeight: '700',

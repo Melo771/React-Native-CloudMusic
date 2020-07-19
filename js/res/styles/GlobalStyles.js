@@ -20,6 +20,7 @@ export default {
   nav_bar_height_android: 50,
   backgroundColor: BACKGROUND_COLOR,
   window_height: height,
+  window_Width: width,
   themeColor: '#d44439',
   themeColorShadow: 'rgba(212, 68, 57, .5)',
 };

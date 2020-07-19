@@ -63,6 +63,7 @@ function Singer(props) {
       return;
     }
     changeInitial(data.key);
+    singerActions.changeEnterLoading(true);
     fetchSingerList(activeType, activeArea, data.key);
     singerListRef.current.scrollToOffset({offset: 0});
   };
@@ -76,19 +77,18 @@ function Singer(props) {
     <View style={[GlobalStyles.root_container, styles.container]}>
       {/*<Categories onChange={onTypeChange} data={TYPES} />*/}
       {/*<Categories onChange={onAreaChange} data={AREA} />*/}
-      {enterLoading ? (
-        <ActivityIndicator size="large" />
-      ) : (
-        <>
-          <SingerList
-            {...props}
-            ref={singerListRef}
-            onRefresh={onRefresh}
-            data={singerList}
-          />
-          <ScrollBar onChange={onChangeInitial} data={INITIALS} />
-        </>
-      )}
+      <>
+        <SingerList
+          {...props}
+          ref={singerListRef}
+          onRefresh={onRefresh}
+          data={singerList}
+        />
+        <ScrollBar onChange={onChangeInitial} data={INITIALS} />
+        {enterLoading ? (
+          <ActivityIndicator style={styles.fixedLoading} size="large" />
+        ) : null}
+      </>
     </View>
   );
 }
@@ -227,6 +227,13 @@ const styles = StyleSheet.create({
   },
   scrollBarItemActive: {
     color: GlobalStyles.themeColor,
+  },
+  fixedLoading: {
+    position: 'absolute',
+    right: 0,
+    left: 0,
+    top: 0,
+    bottom: 0,
   },
 });
 
