@@ -1,6 +1,3 @@
-/*
- * This example demonstrates how to use ParallaxScrollView within a ScrollView component.
- */
 import React, {Component} from 'react';
 import {
   Dimensions,
@@ -16,30 +13,38 @@ import {
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import ParallaxScrollView from 'react-native-parallax-scroll-view';
-import GlobalStyles from '../../res/styles/GlobalStyles';
-import NavigationUtil from '../../navigator/NavigationUtil';
+import GlobalStyles from '../res/styles/GlobalStyles';
+import NavigationUtil from '../navigator/NavigationUtil';
+
+const window = Dimensions.get('window');
+const AVATAR_SIZE = 120;
+const ROW_HEIGHT = 60;
+const PARALLAX_HEADER_HEIGHT = 270;
+const STICKY_HEADER_HEIGHT =
+  Platform.OS === 'ios'
+    ? GlobalStyles.nav_bar_height_ios + TOP
+    : GlobalStyles.nav_bar_height_android;
+
+const TOP =
+  Platform.OS === 'ios' ? 20 + (DeviceInfo.isIPhoneX_deprecated ? 24 : 0) : 15;
+
+// 处理歌手列表拼接歌手名字
+export const getName = list => {
+  let str = '';
+  list.map((item, index) => {
+    str += index === 0 ? item.name : '/' + item.name;
+    return item;
+  });
+  return str;
+};
 
 class Talks extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      dataSource: [
-        'Simplicity Matters',
-        'Hammock Driven Development',
-        'Value of Values',
-        'Are We There Yet?',
-        'The Language of the System',
-        'Design, Composition, and Performance',
-        'Clojure core.async',
-        'The Functional Database',
-        'Deconstructing the Database',
-        'Hammock Driven Development',
-        'Value of Values',
-      ],
-    };
   }
 
   render() {
+    const {data, backgroundImg, title} = this.props;
     return (
       <View style={{flex: 1}}>
         <StatusBar
@@ -50,11 +55,17 @@ class Talks extends Component {
         <FlatList
           ref="ListView"
           style={styles.container}
-          data={this.state.dataSource}
+          data={data}
           renderItem={rowData => {
+            const {item} = rowData;
             return (
               <View key={rowData} style={styles.row}>
-                <Text style={styles.rowText}>{rowData.item}</Text>
+                <Text style={styles.rowText}>{item.name}</Text>
+                <Text style={styles.rowSubText}>
+                  {' '}
+                  {item.ar ? getName(item.ar) : getName(item.artists)} -{' '}
+                  {item.al ? item.al.name : item.album.name}
+                </Text>
               </View>
             );
           }}
@@ -69,10 +80,11 @@ class Talks extends Component {
                 <View key="background">
                   <Image
                     source={{
-                      uri:
-                        'https://p2.music.126.net/nILBk4DaE3yV__25uq-5GQ==/18641120139241412.jpg',
-                      width: window.width,
+                      uri: backgroundImg,
+                    }}
+                    style={{
                       height: PARALLAX_HEADER_HEIGHT,
+                      width: window.width,
                     }}
                   />
                   <View
@@ -88,16 +100,12 @@ class Talks extends Component {
               )}
               renderForeground={() => (
                 <View key="parallax-header" style={styles.parallaxHeader}>
-                  <Text style={styles.sectionSpeakerText}>
-                    Talks by Rich Hickey
-                  </Text>
+                  <Text style={styles.sectionSpeakerText}>{title}</Text>
                 </View>
               )}
               renderStickyHeader={() => (
                 <View key="sticky-header" style={styles.stickySection}>
-                  <Text style={styles.stickySectionText}>
-                    Rich Hickey Talks
-                  </Text>
+                  <Text style={styles.stickySectionText}>{title}</Text>
                 </View>
               )}
               renderFixedHeader={() => (
@@ -121,19 +129,6 @@ class Talks extends Component {
   }
 }
 
-const window = Dimensions.get('window');
-
-const AVATAR_SIZE = 120;
-const ROW_HEIGHT = 60;
-const PARALLAX_HEADER_HEIGHT = 270;
-const STICKY_HEADER_HEIGHT =
-  Platform.OS === 'ios'
-    ? GlobalStyles.nav_bar_height_ios + TOP
-    : GlobalStyles.nav_bar_height_android;
-
-const TOP =
-  Platform.OS === 'ios' ? 20 + (DeviceInfo.isIPhoneX_deprecated ? 24 : 0) : 15;
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -155,7 +150,7 @@ const styles = StyleSheet.create({
   },
   stickySectionText: {
     color: 'white',
-    fontSize: 20,
+    fontSize: 16,
   },
   fixedSection: {
     position: 'absolute',
@@ -185,8 +180,8 @@ const styles = StyleSheet.create({
   },
   sectionSpeakerText: {
     color: 'white',
-    fontSize: 24,
-    paddingVertical: 5,
+    fontSize: 18,
+    paddingHorizontal: 10,
   },
   sectionTitleText: {
     color: 'white',
@@ -203,7 +198,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   rowText: {
-    fontSize: 20,
+    fontSize: 16,
+  },
+  rowSubText: {
+    fontSize: 14,
+    color: 'rgb(187, 168, 168)',
   },
 });
 

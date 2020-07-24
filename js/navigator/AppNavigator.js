@@ -3,7 +3,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 
 import HomePage from '../pages/HomePage';
-import RankingDetail from '../pages/RankingDetail';
+import PlayList from '../pages/PlayList';
 
 const Stack = createStackNavigator();
 
@@ -14,7 +14,7 @@ export default function AppNavigator() {
         initialRouteName={'Home'}
         screenOptions={{headerShown: false}}>
         <Stack.Screen name="Home" component={HomePage} />
-        <Stack.Screen name="RankingDetail" component={RankingDetail} />
+        <Stack.Screen name="PlayList" component={PlayList} />
       </Stack.Navigator>
     </NavigationContainer>
   );

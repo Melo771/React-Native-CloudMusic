@@ -23,7 +23,7 @@ export const getRankListRequest = () => {
   return get('/toplist/detail');
 };
 
-export const getAlbumDetailRequest = id => {
+export const getPlayListDetailRequest = id => {
   return get(`/playlist/detail?id=${id}`);
 };
 

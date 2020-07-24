@@ -75,7 +75,7 @@ function Recommend(props) {
   };
 
   const toDetail = data => {
-    NavigationUtil.goPage('RankingDetail');
+    NavigationUtil.goPage('PlayList', {id: data.id});
   };
 
   // 推荐列表
