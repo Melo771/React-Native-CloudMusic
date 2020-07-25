@@ -1,5 +1,5 @@
 import produce from 'immer';
-import {getPlayListDetailRequest, getRankListRequest} from '../../request';
+import {getPlayListDetailRequest} from '../../request';
 
 const defaultState = {
   playListDetail: {},

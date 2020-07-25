@@ -9,6 +9,8 @@ import {
   FlatList,
   ActivityIndicator,
   RefreshControl,
+  ScrollView,
+  TouchableOpacity,
 } from 'react-native';
 import {
   actions as singerActions,
@@ -18,6 +20,7 @@ import {
 } from '../../redux/modules/singer';
 import GlobalStyles from '../../res/styles/GlobalStyles';
 import {TYPES, AREA, INITIALS} from '../../res/constants/SingerKeys';
+import NavigationUtil from '../../navigator/NavigationUtil';
 
 function Singer(props) {
   const {singerList, enterLoading, singerActions} = props;
@@ -119,8 +122,16 @@ function Categories({data, onChange}) {
 
 const SingerList = forwardRef((props, ref) => {
   const {onRefresh, data, pullDownLoading} = props;
+
+  const toDetail = data => {
+    NavigationUtil.goPage('SingerDetail', {id: data.id});
+  };
+
   const renderItem = ({item}) => (
-    <View style={styles.singerItem}>
+    <TouchableOpacity
+      onPress={() => toDetail(item)}
+      activeOpacity={1}
+      style={styles.singerItem}>
       <Image
         style={styles.singerItemImg}
         source={{
@@ -128,7 +139,7 @@ const SingerList = forwardRef((props, ref) => {
         }}
       />
       <Text style={styles.singerItemName}>{item.name}</Text>
-    </View>
+    </TouchableOpacity>
   );
   return (
     <FlatList
@@ -157,22 +168,26 @@ function ScrollBar({data, onChange}) {
 
   return (
     <View style={[styles.scrollBar]}>
-      {data.map((item, index) => {
-        return (
-          <Text
-            onPress={() => {
-              setActive(index);
-              onChange(item);
-            }}
-            key={item.key}
-            style={[
-              styles.scrollBarItem,
-              active === index && styles.scrollBarItemActive,
-            ]}>
-            {item.name}
-          </Text>
-        );
-      })}
+      <View>
+        <ScrollView showsVerticalScrollIndicator={false}>
+          {data.map((item, index) => {
+            return (
+              <Text
+                onPress={() => {
+                  setActive(index);
+                  onChange(item);
+                }}
+                key={item.key}
+                style={[
+                  styles.scrollBarItem,
+                  active === index && styles.scrollBarItemActive,
+                ]}>
+                {item.name}
+              </Text>
+            );
+          })}
+        </ScrollView>
+      </View>
     </View>
   );
 }

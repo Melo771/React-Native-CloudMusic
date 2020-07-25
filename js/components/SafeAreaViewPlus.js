@@ -5,6 +5,7 @@ import {
   StyleSheet,
   View,
   ViewPropTypes,
+  Platform,
 } from 'react-native';
 import {PropTypes} from 'prop-types';
 
@@ -21,7 +22,7 @@ export default class SafeAreaViewPlus extends Component {
     topColor: 'transparent',
     bottomColor: '#f8f8f8',
     enablePlus: true,
-    topInset: true,
+    topInset: false,
     bottomInset: false,
   };
 
@@ -47,9 +48,9 @@ export default class SafeAreaViewPlus extends Component {
   }
 
   getTopArea(topColor, topInset) {
-    return !DeviceInfo.isIPhoneX_deprecated || !topInset ? null : (
+    return DeviceInfo.isIPhoneX_deprecated || topInset ? (
       <View style={[styles.topArea, {backgroundColor: topColor}]} />
-    );
+    ) : null;
   }
 
   getBottomArea(bottomColor, bottomInset) {
@@ -68,7 +69,10 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   topArea: {
-    height: 44,
+    height:
+      Platform.OS === 'ios'
+        ? 20 + (DeviceInfo.isIPhoneX_deprecated ? 24 : 0)
+        : 15,
   },
   bottomArea: {
     height: 34,

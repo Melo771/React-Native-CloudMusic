@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import HomeTopNavigator from '../../navigator/HomeTopNavigator';
 import GlobalStyles from '../../res/styles/GlobalStyles';
 import NavigationBar from '../../components/NavigationBar';
@@ -41,7 +42,9 @@ function HomePage(props) {
         statusBar={statusBar}
         style={styles.header}
         title={'React Native Cloud Music'}
-        leftButton={<Ionicons name="md-menu" color={'#fff'} size={25} />}
+        leftButton={
+          <MaterialIcons name="favorite-border" color={'#fff'} size={23} />
+        }
         rightButton={<Ionicons name="ios-search" color={'#fff'} size={25} />}
       />
     );

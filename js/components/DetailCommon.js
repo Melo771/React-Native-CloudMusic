@@ -44,7 +44,7 @@ class Talks extends Component {
   }
 
   render() {
-    const {data, backgroundImg, title} = this.props;
+    const {data, backgroundImg, title, onselect} = this.props;
     return (
       <View style={{flex: 1}}>
         <StatusBar
@@ -58,7 +58,11 @@ class Talks extends Component {
           renderItem={rowData => {
             const {item, index} = rowData;
             return (
-              <View key={rowData} style={styles.row}>
+              <TouchableOpacity
+                onPress={() => onselect(item, index)}
+                activeOpacity={1}
+                key={rowData}
+                style={styles.row}>
                 <Text style={styles.rowSeq}>{index + 1}</Text>
                 <View>
                   <Text
@@ -75,7 +79,7 @@ class Talks extends Component {
                     {item.al ? item.al.name : item.album.name}
                   </Text>
                 </View>
-              </View>
+              </TouchableOpacity>
             );
           }}
           renderScrollComponent={props => (

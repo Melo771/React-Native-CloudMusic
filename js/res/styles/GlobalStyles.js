@@ -2,7 +2,7 @@
  * 全局样式
  */
 
-import {Dimensions} from 'react-native';
+import {Dimensions, PixelRatio} from 'react-native';
 
 const BACKGROUND_COLOR = '#fff';
 const {height, width} = Dimensions.get('window');
@@ -21,6 +21,7 @@ export default {
   backgroundColor: BACKGROUND_COLOR,
   window_height: height,
   window_Width: width,
+  onePixel: 1 / PixelRatio.get(),
   themeColor: '#d44439',
   themeColorShadow: 'rgba(212, 68, 57, .5)',
   fixedLoading: {
