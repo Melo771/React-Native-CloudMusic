@@ -8,6 +8,7 @@ import {
   View,
   ScrollView,
   ActivityIndicator,
+  TouchableOpacity,
 } from 'react-native';
 import {
   actions as rankActions,
@@ -15,6 +16,7 @@ import {
   getRankList,
 } from '../../redux/modules/ranking';
 import GlobalStyles from '../../res/styles/GlobalStyles';
+import NavigationUtil from '../../navigator/NavigationUtil';
 
 // 处理数据，找出第一个没有歌名的排行榜的索引
 const filterIndex = rankList => {
@@ -49,10 +51,16 @@ function Ranking(props) {
     });
   };
 
+  const toDetail = data => {
+    NavigationUtil.goPage('PlayList', {id: data.id});
+  };
+
   const renderOfficial = () => {
     return officialList.map((item, index) => {
       return (
-        <View
+        <TouchableOpacity
+          onPress={() => toDetail(item)}
+          activeOpacity={1}
           key={index}
           style={[
             styles.official,
@@ -62,7 +70,7 @@ function Ranking(props) {
           <View style={styles.songListWrapper}>
             {renderSongList(item.tracks)}
           </View>
-        </View>
+        </TouchableOpacity>
       );
     });
   };
@@ -70,7 +78,9 @@ function Ranking(props) {
   const renderGlobalList = () => {
     return globalList.map((item, index) => {
       return (
-        <View
+        <TouchableOpacity
+          onPress={() => toDetail(item)}
+          activeOpacity={1}
           key={index}
           style={(index + 1) % 3 === 0 ? {marginRight: 0} : {marginRight: 4.7}}>
           <RankingCard
@@ -78,7 +88,7 @@ function Ranking(props) {
             desc={item.updateFrequency}
             isGlobal={true}
           />
-        </View>
+        </TouchableOpacity>
       );
     });
   };

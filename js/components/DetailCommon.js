@@ -19,14 +19,14 @@ import NavigationUtil from '../navigator/NavigationUtil';
 const window = Dimensions.get('window');
 const AVATAR_SIZE = 120;
 const ROW_HEIGHT = 60;
-const PARALLAX_HEADER_HEIGHT = 270;
+const PARALLAX_HEADER_HEIGHT =
+  Platform.OS === 'ios' && DeviceInfo.isIPhoneX_deprecated ? 350 : 270;
+const TOP =
+  Platform.OS === 'ios' ? 20 + (DeviceInfo.isIPhoneX_deprecated ? 24 : 0) : 15;
 const STICKY_HEADER_HEIGHT =
   Platform.OS === 'ios'
     ? GlobalStyles.nav_bar_height_ios + TOP
     : GlobalStyles.nav_bar_height_android;
-
-const TOP =
-  Platform.OS === 'ios' ? 20 + (DeviceInfo.isIPhoneX_deprecated ? 24 : 0) : 15;
 
 // 处理歌手列表拼接歌手名字
 export const getName = list => {
@@ -53,19 +53,28 @@ class Talks extends Component {
           animated={true}
         />
         <FlatList
-          ref="ListView"
-          style={styles.container}
           data={data}
+          keyExtractor={item => String(item.id)}
           renderItem={rowData => {
-            const {item} = rowData;
+            const {item, index} = rowData;
             return (
               <View key={rowData} style={styles.row}>
-                <Text style={styles.rowText}>{item.name}</Text>
-                <Text style={styles.rowSubText}>
-                  {' '}
-                  {item.ar ? getName(item.ar) : getName(item.artists)} -{' '}
-                  {item.al ? item.al.name : item.album.name}
-                </Text>
+                <Text style={styles.rowSeq}>{index + 1}</Text>
+                <View>
+                  <Text
+                    numberOfLines={1}
+                    ellipsizeMode="tail"
+                    style={styles.rowText}>
+                    {item.name}
+                  </Text>
+                  <Text
+                    numberOfLines={1}
+                    ellipsizeMode="tail"
+                    style={styles.rowSubText}>
+                    {item.ar ? getName(item.ar) : getName(item.artists)} -{' '}
+                    {item.al ? item.al.name : item.album.name}
+                  </Text>
+                </View>
               </View>
             );
           }}
@@ -130,10 +139,6 @@ class Talks extends Component {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'black',
-  },
   background: {
     position: 'absolute',
     top: 0,
@@ -170,9 +175,9 @@ const styles = StyleSheet.create({
   },
   parallaxHeader: {
     alignItems: 'center',
+    justifyContent: 'center',
     flex: 1,
     flexDirection: 'column',
-    paddingTop: 150,
   },
   avatar: {
     marginBottom: 10,
@@ -189,18 +194,24 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
   },
   row: {
+    paddingTop: 20,
+    paddingRight: 20,
     overflow: 'hidden',
-    paddingHorizontal: 10,
     height: ROW_HEIGHT,
     backgroundColor: 'white',
-    borderColor: '#ccc',
-    borderBottomWidth: 1,
-    justifyContent: 'center',
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  rowSeq: {
+    paddingHorizontal: 20,
+    fontSize: 16,
+    color: 'rgb(187, 168, 168)',
   },
   rowText: {
     fontSize: 16,
   },
   rowSubText: {
+    marginTop: 5,
     fontSize: 14,
     color: 'rgb(187, 168, 168)',
   },

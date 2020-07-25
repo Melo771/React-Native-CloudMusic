@@ -23,4 +23,11 @@ export default {
   window_Width: width,
   themeColor: '#d44439',
   themeColorShadow: 'rgba(212, 68, 57, .5)',
+  fixedLoading: {
+    position: 'absolute',
+    right: 0,
+    left: 0,
+    top: 0,
+    bottom: 0,
+  },
 };

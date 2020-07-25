@@ -86,7 +86,7 @@ function Singer(props) {
         />
         <ScrollBar onChange={onChangeInitial} data={INITIALS} />
         {enterLoading ? (
-          <ActivityIndicator style={styles.fixedLoading} size="large" />
+          <ActivityIndicator style={GlobalStyles.fixedLoading} size="large" />
         ) : null}
       </>
     </View>
@@ -216,25 +216,20 @@ const styles = StyleSheet.create({
   singerItemName: {},
   scrollBar: {
     position: 'absolute',
-    top: 0,
     right: 0,
+    top: 0,
+    bottom: 0,
+    justifyContent: 'center',
     paddingVertical: 10,
     width: 30,
   },
   scrollBarItem: {
     fontSize: 12,
-    marginBottom: 3,
+    marginBottom: 5,
     textAlign: 'center',
   },
   scrollBarItemActive: {
     color: GlobalStyles.themeColor,
-  },
-  fixedLoading: {
-    position: 'absolute',
-    right: 0,
-    left: 0,
-    top: 0,
-    bottom: 0,
   },
 });
 

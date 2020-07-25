@@ -15,10 +15,7 @@ const changePlayListDetail = data => ({
   type: types.CHANGE_PLAY_LIST_DETAIL,
   data,
 });
-const changeEnterLoading = data => ({
-  type: types.CHANGE_LOADING,
-  data,
-});
+
 //action creators
 export const actions = {
   getPlayListDetail: id => {
@@ -27,13 +24,17 @@ export const actions = {
         .then(res => {
           let data = res.playlist;
           dispatch(changePlayListDetail(data));
-          dispatch(changeEnterLoading(false));
+          dispatch(actions.changeEnterLoading(false));
         })
         .catch(() => {
           console.log('获取歌单数据失败！');
         });
     };
   },
+  changeEnterLoading: data => ({
+    type: types.CHANGE_LOADING,
+    data,
+  }),
 };
 
 const reducer = (state = defaultState, action) =>
